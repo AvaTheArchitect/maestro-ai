@@ -96,7 +96,7 @@ export default function MaestroApp() {
       case 'singers':
         return (
           <div className="p-6 space-y-6">
-            <h2 className="text-3xl font-bold text-purple-400 text-center mb-6">🎤 Singer's Corner</h2>
+<h2 className="text-3xl font-bold text-purple-400 text-center mb-6">🎤 Singer&apos;s Corner</h2>
             <p className="text-purple-200 text-center">Ken Tamplin Vocal Academy Training System</p>
             
             <div className="grid grid-cols-2 gap-4">
