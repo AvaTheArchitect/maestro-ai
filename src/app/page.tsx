@@ -1,28 +1,28 @@
-'use client'
+"use client"
 
-import React, { useState, useEffect } from 'react'
-import { Guitar, Mic, Music, Settings, Headphones } from 'lucide-react'
+import React, { useState, useEffect } from "react"
+import { Guitar, Mic, Music, Settings, Headphones } from "lucide-react"
 
-export type TabId = 'practice' | 'singers' | 'build' | 'stem' | 'tuner'
+export type TabId = "practice" | "singers" | "build" | "stem" | "tuner"
 
 export default function MaestroApp() {
-  const [activeTab, setActiveTab] = useState<TabId>('practice')
+  const [activeTab, setActiveTab] = useState<TabId>("practice")
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState("")
 
   const checkPassword = () => {
-    if (password === 'guitar2025') {
+    if (password === "guitar2025") {
       setIsAuthenticated(true)
-      sessionStorage.setItem('maestro-authenticated', 'true')
+      sessionStorage.setItem("maestro-authenticated", "true")
     } else {
-      alert('Incorrect password')
-      setPassword('')
+      alert("Incorrect password")
+      setPassword("")
     }
   }
 
   useEffect(() => {
-    const authenticated = sessionStorage.getItem('maestro-authenticated')
-    if (authenticated === 'true') {
+    const authenticated = sessionStorage.getItem("maestro-authenticated")
+    if (authenticated === "true") {
       setIsAuthenticated(true)
     }
   }, [])
@@ -39,7 +39,7 @@ export default function MaestroApp() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && checkPassword()}
+            onKeyPress={(e) => e.key === "Enter" && checkPassword()}
             placeholder="Enter password"
             className="w-full p-4 border-2 border-gray-300 rounded-xl text-lg mb-4 focus:border-purple-500 focus:outline-none"
             autoFocus
@@ -58,7 +58,7 @@ export default function MaestroApp() {
 
   const renderTabContent = () => {
     switch(activeTab) {
-      case 'practice':
+      case "practice":
         return (
           <div className="p-6 space-y-6">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent text-center mb-6">
@@ -66,7 +66,7 @@ export default function MaestroApp() {
             </h1>
             
             <div className="grid grid-cols-2 gap-4">
-              {['Guitar', 'Shred', 'Country', 'Worship', 'Acoustic', 'Modern Rock'].map((path) => (
+              {["Guitar", "Shred", "Country", "Worship", "Acoustic", "Modern Rock"].map((path) => (
                 <button 
                   key={path}
                   className="p-4 bg-blue-500/10 backdrop-blur-lg rounded-xl border border-blue-300/30 hover:border-blue-400/50 transition-all duration-300"
@@ -85,7 +85,7 @@ export default function MaestroApp() {
                     <span>42 min / 60 min</span>
                   </div>
                   <div className="w-full bg-gray-600 rounded-full h-3">
-                    <div className="bg-gradient-to-r from-orange-400 to-orange-600 h-3 rounded-full" style={{width: '68%'}}></div>
+                    <div className="bg-gradient-to-r from-orange-400 to-orange-600 h-3 rounded-full" style={{width: "68%"}}></div>
                   </div>
                 </div>
               </div>
@@ -93,18 +93,18 @@ export default function MaestroApp() {
           </div>
         )
 
-      case 'singers':
+      case "singers":
         return (
           <div className="p-6 space-y-6">
-<h2 className="text-3xl font-bold text-purple-400 text-center mb-6">🎤 Singer&apos;s Corner</h2>
+            <h2 className="text-3xl font-bold text-purple-400 text-center mb-6">🎤 Singer&apos;s Corner</h2>
             <p className="text-purple-200 text-center">Ken Tamplin Vocal Academy Training System</p>
             
             <div className="grid grid-cols-2 gap-4">
               {[
-                { icon: '💋', name: 'Lip Trills', desc: 'Relaxation and breath support' },
-                { icon: '🌊', name: 'Vocal Sirens', desc: 'Smooth register transitions' },
-                { icon: '🎵', name: 'Humming Scales', desc: 'Resonance development' },
-                { icon: '🗣️', name: 'MAH Exercise', desc: 'Open throat training' }
+                { icon: "💋", name: "Lip Trills", desc: "Relaxation and breath support" },
+                { icon: "🌊", name: "Vocal Sirens", desc: "Smooth register transitions" },
+                { icon: "🎵", name: "Humming Scales", desc: "Resonance development" },
+                { icon: "🗣️", name: "MAH Exercise", desc: "Open throat training" }
               ].map((exercise) => (
                 <div
                   key={exercise.name}
@@ -119,7 +119,7 @@ export default function MaestroApp() {
           </div>
         )
 
-      case 'build':
+      case "build":
         return (
           <div className="p-6 space-y-6">
             <h2 className="text-3xl font-bold text-green-400 text-center mb-6">🎼 Song Builder AI</h2>
@@ -127,7 +127,7 @@ export default function MaestroApp() {
             <div className="bg-green-500/10 backdrop-blur-lg rounded-xl p-6 border border-green-300/30">
               <h3 className="font-semibold text-green-400 mb-4">🎸 Chord Progression Builder</h3>
               <div className="flex space-x-2 mb-4">
-                {['C', 'Am', 'F', 'G'].map((chord) => (
+                {["C", "Am", "F", "G"].map((chord) => (
                   <button key={chord} className="px-4 py-2 bg-green-400/20 rounded-lg hover:bg-green-400/30 transition-colors">
                     {chord}
                   </button>
@@ -145,7 +145,7 @@ export default function MaestroApp() {
           </div>
         )
 
-      case 'stem':
+      case "stem":
         return (
           <div className="p-6 space-y-6">
             <h2 className="text-3xl font-bold text-orange-400 text-center mb-6">🎧 AI Stem & Tab Studio</h2>
@@ -161,7 +161,7 @@ export default function MaestroApp() {
           </div>
         )
 
-      case 'tuner':
+      case "tuner":
         return (
           <div className="p-6 space-y-6">
             <h2 className="text-3xl font-bold text-red-400 text-center mb-6">🔥 Flame Tuner Pro</h2>
@@ -196,11 +196,11 @@ export default function MaestroApp() {
       <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 max-w-md w-full bg-black/80 backdrop-blur-lg border-t border-gray-700">
         <div className="flex justify-around py-2">
           {[
-            { id: 'practice', icon: Guitar, label: 'Practice', color: 'text-blue-500' },
-            { id: 'singers', icon: Mic, label: 'Singers Corner', color: 'text-purple-500' },
-            { id: 'build', icon: Music, label: 'Build a Song', color: 'text-green-500' },
-            { id: 'stem', icon: Headphones, label: 'AI Stem & Tab', color: 'text-orange-500' },
-            { id: 'tuner', icon: Settings, label: 'Tuner', color: 'text-red-500' }
+            { id: "practice", icon: Guitar, label: "Practice", color: "text-blue-500" },
+            { id: "singers", icon: Mic, label: "Singers Corner", color: "text-purple-500" },
+            { id: "build", icon: Music, label: "Build a Song", color: "text-green-500" },
+            { id: "stem", icon: Headphones, label: "AI Stem & Tab", color: "text-orange-500" },
+            { id: "tuner", icon: Settings, label: "Tuner", color: "text-red-500" }
           ].map((tab) => {
             const Icon = tab.icon
             return (
@@ -210,7 +210,7 @@ export default function MaestroApp() {
                 className={`flex flex-col items-center p-3 transition-all duration-300 ${
                   activeTab === tab.id 
                     ? `${tab.color} transform scale-110` 
-                    : 'text-gray-400 hover:text-gray-200'
+                    : "text-gray-400 hover:text-gray-200"
                 }`}
               >
                 <Icon size={20} />
