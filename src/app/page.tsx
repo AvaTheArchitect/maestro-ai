@@ -26,7 +26,7 @@ import {
 export type TabId = "home" | "songs" | "setlist" | "tools" | "profile"
 export type ModuleId = "practice" | "singers" | "jam" | "lessons" | "build" | "ai-tab"
 
-export default function MaestroApp() { 
+export default function MaestroApp(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<TabId>("home")
   const [currentModule, setCurrentModule] = useState<ModuleId | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -118,7 +118,7 @@ export default function MaestroApp() {
     }
   }
 
-  const t = (translations as any)[language] || translations.en
+  const t = (translations as Record<string, any>)[language] || translations.en
 
   // Theme functions
   const changeTheme = (newTheme: string) => {
@@ -301,7 +301,7 @@ export default function MaestroApp() {
     )
   }
 
-  const ModuleTile = ({ module, onClick }: { module: any; onClick: () => void }) => {
+  const ModuleTile = ({ module, onClick }: { module: Record<string, any>; onClick: () => void }) => {
     const animationClass = reducedMotion 
       ? 'transform transition-colors duration-200' 
       : 'transform transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95'
@@ -346,16 +346,22 @@ export default function MaestroApp() {
     )
   }
 
-  const renderMainContent = () => {
+  const renderMainContent = (): React.JSX.Element => {
     if (currentModule) {
-      const module = modules.find(m => m.id === currentModule)
-      if (!module) return null
+      const moduleData = modules.find(m => m.id === currentModule)
+      if (!moduleData) {
+        return (
+          <div className="flex-1 p-6 pb-24">
+            <div className="text-center text-white">Module not found</div>
+          </div>
+        )
+      }
 
       return (
         <div className="flex-1 p-6 pb-24">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center mb-6">
-              <button 
+              <button
                 onClick={() => setCurrentModule(null)}
                 className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors mr-4"
               >
@@ -363,28 +369,28 @@ export default function MaestroApp() {
               </button>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
-                  {module.title}
+                  {moduleData.title}
                 </h1>
-                <p className="text-white/70">{module.description}</p>
+                <p className="text-white/70">{moduleData.description}</p>
               </div>
             </div>
-            
+
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
               <div className="text-center py-12">
-                <module.icon className="w-16 h-16 text-white/50 mx-auto mb-4" />
+                <moduleData.icon className="w-16 h-16 text-white/50 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-white mb-2">
-                  {module.title} Module
+                  {moduleData.title} Module
                 </h3>
                 <p className="text-white/70 mb-6">
                   This module is under development. Coming soon with full functionality!
                 </p>
-                
+
                 {currentModule === 'lessons' && (
                   <div className="bg-green-500/20 border border-green-500/30 rounded-xl p-4 mt-6">
-                    <h4 className="text-green-300 font-bold mb-2">🎓 Teachers' Connection Hub</h4>
+                    <h4 className="text-green-300 font-bold mb-2">🎓 Teachers&apos; Connection Hub</h4>
                     <p className="text-green-200 text-sm">
-                      Connect with local instructors, upload practice videos, get feedback, 
-                      and maintain your lesson schedule. Perfect companion for Guitar Center 
+                      Connect with local instructors, upload practice videos, get feedback,
+                      and maintain your lesson schedule. Perfect companion for Guitar Center
                       lessons and independent teachers.
                     </p>
                   </div>
@@ -407,10 +413,10 @@ export default function MaestroApp() {
               {t.subtitle}
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {modules.map((module) => (
-              <ModuleTile 
+              <ModuleTile
                 key={module.id}
                 module={module}
                 onClick={() => setCurrentModule(module.id as ModuleId)}
@@ -619,71 +625,71 @@ export default function MaestroApp() {
                     <span>High Contrast</span>
                     <div className={`w-12 h-6 rounded-full transition-colors ${highContrast ? 'bg-green-500' : 'bg-gray-600'}`}>
                       <div className={`w-5 h-5 bg-white rounded-full transition-transform mt-0.5 ${highContrast ? 'translate-x-6 ml-1' : 'ml-0.5'}`} />
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {/* Guitar Orientation */}
-            <div>
-              <h4 className="text-white font-medium mb-3">Guitar Orientation</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { id: 'right', label: 'Right-Handed' },
-                  { id: 'left', label: 'Left-Handed' }
-                ].map((hand) => (
-                  <button
-                    key={hand.id}
-                    onClick={() => {
-                      setHandedness(hand.id)
-                      localStorage.setItem('maestro-handedness', hand.id)
-                    }}
-                    className={`
-                      p-3 rounded-xl transition-colors text-center
-                      ${handedness === hand.id 
-                        ? 'bg-blue-500/30 text-white ring-2 ring-blue-400' 
-                        : 'bg-white/10 text-white/70 hover:bg-white/20'
-                      }
-                    `}
-                  >
-                    {hand.label}
+                    </div>
                   </button>
-                ))}
+                </div>
               </div>
-            </div>
 
-            {/* Language Selection */}
-            <div>
-              <h4 className="text-white font-medium mb-3">Language</h4>
-              <div className="space-y-2">
-                {[
-                  { id: 'en', label: 'English', flag: '🇺🇸' },
-                  { id: 'es', label: 'Español', flag: '🇪🇸' }
-                ].map((lang) => (
-                  <button
-                    key={lang.id}
-                    onClick={() => {
-                      setLanguage(lang.id)
-                      localStorage.setItem('maestro-language', lang.id)
-                    }}
-                    className={`
-                      w-full flex items-center p-3 rounded-xl transition-colors
-                      ${language === lang.id 
-                        ? 'bg-blue-500/30 text-white ring-2 ring-blue-400' 
-                        : 'bg-white/10 text-white/70 hover:bg-white/20'
-                      }
-                    `}
-                  >
-                    <span className="mr-3 text-xl">{lang.flag}</span>
-                    {lang.label}
-                  </button>
-                ))}
+              {/* Guitar Orientation */}
+              <div>
+                <h4 className="text-white font-medium mb-3">Guitar Orientation</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { id: 'right', label: 'Right-Handed' },
+                    { id: 'left', label: 'Left-Handed' }
+                  ].map((hand) => (
+                    <button
+                      key={hand.id}
+                      onClick={() => {
+                        setHandedness(hand.id)
+                        localStorage.setItem('maestro-handedness', hand.id)
+                      }}
+                      className={`
+                        p-3 rounded-xl transition-colors text-center
+                        ${handedness === hand.id 
+                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400' 
+                          : 'bg-white/10 text-white/70 hover:bg-white/20'
+                        }
+                      `}
+                    >
+                      {hand.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Language Selection */}
+              <div>
+                <h4 className="text-white font-medium mb-3">Language</h4>
+                <div className="space-y-2">
+                  {[
+                    { id: 'en', label: 'English', flag: '🇺🇸' },
+                    { id: 'es', label: 'Español', flag: '🇪🇸' }
+                  ].map((lang) => (
+                    <button
+                      key={lang.id}
+                      onClick={() => {
+                        setLanguage(lang.id)
+                        localStorage.setItem('maestro-language', lang.id)
+                      }}
+                      className={`
+                        w-full flex items-center p-3 rounded-xl transition-colors
+                        ${language === lang.id 
+                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400' 
+                          : 'bg-white/10 text-white/70 hover:bg-white/20'
+                        }
+                      `}
+                    >
+                      <span className="mr-3 text-xl">{lang.flag}</span>
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-   </div>
-   </div>
+    </div>
   )
-  }
+}
