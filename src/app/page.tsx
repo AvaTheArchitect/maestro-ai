@@ -14,7 +14,6 @@ import {
   Wrench,
   Brain,
   Timer,
-  Play,
   Printer,
   ChevronDown,
   X,
@@ -118,7 +117,7 @@ export default function MaestroApp(): React.JSX.Element {
     }
   }
 
-  const t = (translations as Record<string, any>)[language] || translations.en
+  const t = translations[language as keyof typeof translations] || translations.en
 
   // Theme functions
   const changeTheme = (newTheme: string) => {
@@ -149,79 +148,72 @@ export default function MaestroApp(): React.JSX.Element {
     if (theme === 'crayon') {
       // Crayon theme always stays multi-color (no override)
       const colors: Record<string, string> = {
-        practice: 'from-purple-500 to-purple-700 shadow-lg shadow-purple-500/25',
-        singers: 'from-pink-500 to-rose-700 shadow-lg shadow-pink-500/25',
-        jam: 'from-blue-500 to-blue-700 shadow-lg shadow-blue-500/25',
-        lessons: 'from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-500/25',
-        build: 'from-orange-500 to-orange-700 shadow-lg shadow-orange-500/25',
-        'ai-tab': 'from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/25'
+        practice: 'from-purple-500 to-purple-700 shadow-lg shadow-purple-500/25 text-white',
+        singers: 'from-pink-500 to-rose-700 shadow-lg shadow-pink-500/25 text-white',
+        jam: 'from-blue-500 to-blue-700 shadow-lg shadow-blue-500/25 text-white',
+        lessons: 'from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-500/25 text-white',
+        build: 'from-orange-500 to-orange-700 shadow-lg shadow-orange-500/25 text-white',
+        'ai-tab': 'from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/25 text-white'
       }
       return colors[moduleId] || colors.practice
     }
     
     if (buttonColorMode) {
-      // Multi-Color Buttons ON - vibrant multicolor
+      // Multi-Color Buttons ON - vibrant multicolor (like image 2)
       const colors: Record<string, string> = {
-        practice: 'from-purple-500 to-purple-700 shadow-lg shadow-purple-500/25',
-        singers: 'from-pink-500 to-rose-700 shadow-lg shadow-pink-500/25',
-        jam: 'from-blue-500 to-blue-700 shadow-lg shadow-blue-500/25',
-        lessons: 'from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-500/25',
-        build: 'from-orange-500 to-orange-700 shadow-lg shadow-orange-500/25',
-        'ai-tab': 'from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/25'
+        practice: 'from-purple-500 to-purple-700 shadow-lg shadow-purple-500/25 text-white',
+        singers: 'from-pink-500 to-rose-700 shadow-lg shadow-pink-500/25 text-white',
+        jam: 'from-blue-500 to-blue-700 shadow-lg shadow-blue-500/25 text-white',
+        lessons: 'from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-500/25 text-white',
+        build: 'from-orange-500 to-orange-700 shadow-lg shadow-orange-500/25 text-white',
+        'ai-tab': 'from-indigo-500 to-indigo-700 shadow-lg shadow-indigo-500/25 text-white'
       }
       return colors[moduleId] || colors.practice
     } else {
       // Multi-Color Buttons OFF - Version 29 exact theme colors
       switch(theme) {
         case 'dark':
-          return 'from-gray-600 to-gray-700 shadow-lg shadow-gray-600/25 text-blue-100' // 4b5563
-        case 'purple-orange':
-          return 'from-violet-700 to-violet-800 shadow-lg shadow-violet-700/25 text-violet-100' // 6d28d9
+          return 'from-gray-600 to-gray-700 shadow-lg shadow-gray-600/25 text-blue-100'
         case 'guitar-center':
-          return 'from-red-700 to-red-800 shadow-lg shadow-red-700/25 text-red-100' // b91c1c
+          return 'from-red-700 to-red-800 shadow-lg shadow-red-700/25 text-red-100'
         case 'pro-studio':
-          return 'from-blue-800 to-blue-900 shadow-lg shadow-blue-800/25 text-blue-100' // 1e3a8a
-        default: // Purple theme - Version 29 exact blue (4338ca equivalent)
-          return 'from-indigo-700 to-indigo-800 shadow-lg shadow-indigo-700/25 text-blue-100 border-indigo-600/30'
+          return 'from-blue-800 to-blue-900 shadow-lg shadow-blue-800/25 text-blue-100'
+        default: // 🔒 LOCKED: RESTORED Original Simon's Guitar Practice Generator Style (image 3)
+          return 'bg-blue-500/5 backdrop-blur-lg border border-blue-300/20 shadow-lg shadow-purple-900/20 text-blue-200 hover:bg-blue-500/10 hover:border-blue-400/30 transition-all duration-300'
       }
     }
   }
 
-  // Get theme classes
-  const getThemeClasses = (): string => {
+ const getThemeClasses = (): string => {
     const base = 'min-h-screen transition-colors duration-300'
     const motion = reducedMotion ? '' : 'transition-all duration-300'
     const contrast = highContrast ? 'contrast-125 saturate-125' : ''
     
     switch(theme) {
       case 'dark':
-        return `${base} ${motion} ${contrast} bg-gray-900 text-white`
+        return `${base} ${motion} ${contrast} bg-gray-900 text-white relative`
       case 'crayon':
         return `${base} ${motion} ${contrast} bg-gradient-to-br from-red-400 via-yellow-400 via-green-400 via-blue-400 to-purple-500 text-white`
-      case 'purple-orange':
-        return `${base} ${motion} ${contrast} bg-gradient-to-br from-purple-500 via-purple-600 to-orange-500 text-white`
       case 'guitar-center':
-        return `${base} ${motion} ${contrast} bg-gradient-to-br from-red-600 via-red-700 to-black text-white`
+        return `${base} ${motion} ${contrast} bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 text-white`
       case 'pro-studio':
-        return `${base} ${motion} ${contrast} bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 text-white`
-      default:
-        return `${base} ${motion} ${contrast} bg-gradient-to-br from-purple-800 via-purple-900 to-indigo-900 text-white`
+        return `${base} ${motion} ${contrast} bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white`
+      default: // 🔒 LOCKED: EXACT WORKING Purple/Orange V29 Linear Gradient (DO NOT MODIFY)
+        return `${base} ${motion} ${contrast} bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white`
     }
   }
-
+  
   const getTitleColor = (): string => {
     switch(theme) {
       case 'dark':
-        return 'text-white'
+        return 'text-orange-500 font-bold tracking-wide'
       case 'crayon':
         return 'text-white'
-      case 'purple-orange':
-        return 'text-orange-500'
       case 'guitar-center':
         return 'text-red-400'
       case 'pro-studio':
         return 'text-blue-400'
-      default: // Version 29 - Exact orange from screenshots
+      default: // 🔒 LOCKED: Orange logo color V29 (DO NOT MODIFY)
         return 'text-orange-500 font-bold tracking-wide'
     }
   }
@@ -301,7 +293,7 @@ export default function MaestroApp(): React.JSX.Element {
     )
   }
 
-  const ModuleTile = ({ module, onClick }: { module: Record<string, any>; onClick: () => void }) => {
+  const ModuleTile = ({ module, onClick }: { module: typeof modules[0]; onClick: () => void }) => {
     const animationClass = reducedMotion 
       ? 'transform transition-colors duration-200' 
       : 'transform transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95'
@@ -334,10 +326,10 @@ export default function MaestroApp(): React.JSX.Element {
           <div className="w-2 h-2 bg-white/30 rounded-full shadow-inner" aria-hidden="true"></div>
         </div>
         <div>
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 font-sans drop-shadow-md">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 font-sans drop-shadow-md">
             {module.title}
           </h3>
-          <p className="text-white/80 text-sm sm:text-base font-sans leading-relaxed drop-shadow-sm">
+          <p className="text-sm sm:text-base font-sans leading-relaxed drop-shadow-sm">
             {module.description}
           </p>
         </div>
@@ -541,9 +533,8 @@ export default function MaestroApp(): React.JSX.Element {
                 <h4 className="text-white font-medium mb-3">Theme</h4>
                 <div className="space-y-2">
                   {[
-                    { id: 'light', label: 'Default Purple', icon: Sun },
+                    { id: 'light', label: 'Purple/Orange V29', icon: Sun },
                     { id: 'dark', label: 'Dark Mode', icon: Moon },
-                    { id: 'purple-orange', label: 'Purple & Orange', icon: Palette },
                     { id: 'crayon', label: 'Crayon Colors', icon: Palette },
                     { id: 'guitar-center', label: 'Guitar Center Red', icon: Guitar },
                     { id: 'pro-studio', label: 'Pro Studio Blue', icon: Headphones }
