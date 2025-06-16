@@ -6,7 +6,9 @@ export default function VocalTrainer() {
       <p className="text-lg mb-6 text-center max-w-xl">
         This is your AI-powered vocal lab — pitch feedback, tempo sync, stylistic cues, and real-time scoring with Cipher.ai. 🚀
       </p>
-      <p className="italic text-pink-400">“Crack that Sebastian Bach high note and you might set off car alarms...”</p>
+      <p className="italic text-pink-400">
+        "Crack that Sebastian Bach high note and you might set off car alarms..."
+      </p>
     </div>
   );
 }
