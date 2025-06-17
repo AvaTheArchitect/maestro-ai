@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { 
-  Guitar, 
-  Mic, 
-  Music, 
-  Settings, 
+import {
+  Guitar,
+  Mic,
+  Music,
+  Settings,
   Headphones,
   Home,
   Users,
@@ -32,7 +32,7 @@ export default function MaestroApp(): React.JSX.Element {
   const [password, setPassword] = useState("")
   const [toolDrawerOpen, setToolDrawerOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
-  
+
   // Theme and settings state
   const [theme, setTheme] = useState<string>('light')
   const [reducedMotion, setReducedMotion] = useState<boolean>(false)
@@ -49,7 +49,7 @@ export default function MaestroApp(): React.JSX.Element {
     const savedHand = localStorage.getItem('maestro-handedness') || 'right'
     const savedLang = localStorage.getItem('maestro-language') || 'en'
     const savedButtonMode = localStorage.getItem('maestro-button-color-mode') !== 'false'
-    
+
     setTheme(savedTheme)
     setReducedMotion(savedMotion)
     setHighContrast(savedContrast)
@@ -90,7 +90,7 @@ export default function MaestroApp(): React.JSX.Element {
       },
       nav: {
         songs: 'Songs',
-        setlist: 'Setlist', 
+        setlist: 'Setlist',
         home: 'Home',
         tools: 'Tools',
         profile: 'Profile'
@@ -110,7 +110,7 @@ export default function MaestroApp(): React.JSX.Element {
       nav: {
         songs: 'Canciones',
         setlist: 'Lista',
-        home: 'Inicio', 
+        home: 'Inicio',
         tools: 'Herramientas',
         profile: 'Perfil'
       }
@@ -157,7 +157,7 @@ export default function MaestroApp(): React.JSX.Element {
       }
       return colors[moduleId] || colors.practice
     }
-    
+
     if (buttonColorMode) {
       // Multi-Color Buttons ON - vibrant multicolor (like image 2)
       const colors: Record<string, string> = {
@@ -171,7 +171,7 @@ export default function MaestroApp(): React.JSX.Element {
       return colors[moduleId] || colors.practice
     } else {
       // Multi-Color Buttons OFF - Version 29 exact theme colors
-      switch(theme) {
+      switch (theme) {
         case 'dark':
           return 'from-gray-600 to-gray-700 shadow-lg shadow-gray-600/25 text-blue-100'
         case 'guitar-center':
@@ -184,12 +184,12 @@ export default function MaestroApp(): React.JSX.Element {
     }
   }
 
- const getThemeClasses = (): string => {
+  const getThemeClasses = (): string => {
     const base = 'min-h-screen transition-colors duration-300'
     const motion = reducedMotion ? '' : 'transition-all duration-300'
     const contrast = highContrast ? 'contrast-125 saturate-125' : ''
-    
-    switch(theme) {
+
+    switch (theme) {
       case 'dark':
         return `${base} ${motion} ${contrast} bg-gray-900 text-white relative`
       case 'crayon':
@@ -202,9 +202,9 @@ export default function MaestroApp(): React.JSX.Element {
         return `${base} ${motion} ${contrast} bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white`
     }
   }
-  
+
   const getTitleColor = (): string => {
-    switch(theme) {
+    switch (theme) {
       case 'dark':
         return 'text-orange-500 font-bold tracking-wide'
       case 'crayon':
@@ -220,47 +220,53 @@ export default function MaestroApp(): React.JSX.Element {
 
   // Main modules configuration
   const modules = [
-    { 
-      id: 'practice' as ModuleId, 
-      title: t.modules.practice.title, 
-      icon: Guitar, 
+    {
+      id: 'practice' as ModuleId,
+      title: t.modules.practice.title,
+      icon: Guitar,
       color: getModuleColor('practice'),
-      description: t.modules.practice.desc
+      description: t.modules.practice.desc,
+      route: null // Internal module
     },
-    { 
-      id: 'singers' as ModuleId, 
-      title: t.modules.singers.title, 
-      icon: Mic, 
+    {
+      id: 'singers' as ModuleId,
+      title: t.modules.singers.title,
+      icon: Mic,
       color: getModuleColor('singers'),
-      description: t.modules.singers.desc
+      description: t.modules.singers.desc,
+      route: '/vocal' // External route to your vocal page
     },
-    { 
-      id: 'jam' as ModuleId, 
-      title: t.modules.jam.title, 
-      icon: Music, 
+    {
+      id: 'jam' as ModuleId,
+      title: t.modules.jam.title,
+      icon: Music,
       color: getModuleColor('jam'),
-      description: t.modules.jam.desc
+      description: t.modules.jam.desc,
+      route: null // Internal module
     },
-    { 
-      id: 'lessons' as ModuleId, 
-      title: t.modules.lessons.title, 
-      icon: GraduationCap, 
+    {
+      id: 'lessons' as ModuleId,
+      title: t.modules.lessons.title,
+      icon: GraduationCap,
       color: getModuleColor('lessons'),
-      description: t.modules.lessons.desc
+      description: t.modules.lessons.desc,
+      route: null // Internal module
     },
-    { 
-      id: 'build' as ModuleId, 
-      title: t.modules.build.title, 
-      icon: Wrench, 
+    {
+      id: 'build' as ModuleId,
+      title: t.modules.build.title,
+      icon: Wrench,
       color: getModuleColor('build'),
-      description: t.modules.build.desc
+      description: t.modules.build.desc,
+      route: null // Internal module
     },
-    { 
-      id: 'ai-tab' as ModuleId, 
-      title: t.modules['ai-tab'].title, 
-      icon: Brain, 
+    {
+      id: 'ai-tab' as ModuleId,
+      title: t.modules['ai-tab'].title,
+      icon: Brain,
       color: getModuleColor('ai-tab'),
-      description: t.modules['ai-tab'].desc
+      description: t.modules['ai-tab'].desc,
+      route: null // Internal module
     }
   ]
 
@@ -271,7 +277,7 @@ export default function MaestroApp(): React.JSX.Element {
           <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent mb-2">🎸 Maestro.AI</h2>
           <p className="text-gray-600 text-lg mb-2">Guitar Practice Suite</p>
           <p className="text-gray-500 text-sm mb-6">Enter password to access beta</p>
-          
+
           <input
             type="password"
             value={password}
@@ -281,7 +287,7 @@ export default function MaestroApp(): React.JSX.Element {
             className="w-full p-4 border-2 border-gray-300 rounded-xl text-lg mb-4 focus:border-purple-500 focus:outline-none"
             autoFocus
           />
-          
+
           <button
             onClick={checkPassword}
             className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white p-4 rounded-xl text-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-300"
@@ -294,12 +300,48 @@ export default function MaestroApp(): React.JSX.Element {
   }
 
   const ModuleTile = ({ module, onClick }: { module: typeof modules[0]; onClick: () => void }) => {
-    const animationClass = reducedMotion 
-      ? 'transform transition-colors duration-200' 
+    const animationClass = reducedMotion
+      ? 'transform transition-colors duration-200'
       : 'transform transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95'
-    
+
+    // If module has a route, render as a link instead of a button
+    if (module.route) {
+      return (
+        <a
+          href={module.route}
+          className={`
+            relative overflow-hidden rounded-2xl cursor-pointer ${animationClass}
+            focus:outline-none focus:ring-4 focus:ring-white/50 focus:ring-opacity-75
+            bg-gradient-to-br ${module.color}
+            p-6 sm:p-8 md:p-6 lg:p-8
+            min-h-[120px] sm:min-h-[140px] md:min-h-[160px]
+            flex flex-col justify-between
+            border border-white/10
+            ${!reducedMotion ? 'hover:shadow-xl hover:-translate-y-1' : ''}
+            block no-underline
+          `}
+          aria-label={`Open ${module.title} - ${module.description}`}
+        >
+          <div className="flex items-start justify-between mb-4">
+            <module.icon className="w-8 h-8 sm:w-10 sm:h-10 text-white/90 drop-shadow-lg" aria-hidden="true" />
+            <div className="w-2 h-2 bg-white/30 rounded-full shadow-inner" aria-hidden="true"></div>
+          </div>
+          <div>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 font-sans drop-shadow-md">
+              {module.title}
+            </h3>
+            <p className="text-sm sm:text-base font-sans leading-relaxed drop-shadow-sm">
+              {module.description}
+            </p>
+          </div>
+          <div className="absolute inset-0 bg-white/5 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" aria-hidden="true"></div>
+        </a>
+      )
+    }
+
+    // Regular button for internal modules
     return (
-      <div 
+      <div
         className={`
           relative overflow-hidden rounded-2xl cursor-pointer ${animationClass}
           focus:outline-none focus:ring-4 focus:ring-white/50 focus:ring-opacity-75
@@ -425,10 +467,10 @@ export default function MaestroApp(): React.JSX.Element {
       {/* Corner fade shadows */}
       <div className="fixed inset-0 bg-gradient-to-br from-black/30 via-transparent to-transparent pointer-events-none" />
       <div className="fixed inset-0 bg-gradient-to-tl from-black/30 via-transparent to-transparent pointer-events-none" />
-      
+
       <div className="flex flex-col min-h-screen relative z-10">
         {renderMainContent()}
-        
+
         {/* Bottom Navigation */}
         <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800">
           <div className="flex justify-around items-center py-2 px-4 max-w-md mx-auto">
@@ -455,7 +497,7 @@ export default function MaestroApp(): React.JSX.Element {
                   flex flex-col items-center p-3 rounded-xl transition-all duration-200
                   focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
                   ${(activeTab === item.id) || (item.id === 'home' && !currentModule)
-                    ? 'text-blue-400 bg-blue-400/20' 
+                    ? 'text-blue-400 bg-blue-400/20'
                     : 'text-white hover:text-white/80'
                   }
                 `}
@@ -475,14 +517,14 @@ export default function MaestroApp(): React.JSX.Element {
           <div className="bg-white/10 backdrop-blur-lg rounded-t-3xl p-6 border-t border-white/20">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-white">Practice Tools</h3>
-              <button 
+              <button
                 onClick={() => setToolDrawerOpen(false)}
                 className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
               >
                 <ChevronDown className="w-6 h-6 text-white" />
               </button>
             </div>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
               {[
                 { id: 'metronome', icon: Timer, label: 'Metronome' },
@@ -515,18 +557,18 @@ export default function MaestroApp(): React.JSX.Element {
           transition-opacity duration-300
         `}>
           <div className="absolute inset-0 bg-black/50" onClick={() => setSettingsOpen(false)} />
-          
+
           <div className="relative bg-white/10 backdrop-blur-lg rounded-2xl p-6 w-full max-w-md border border-white/20 max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-white">Settings</h3>
-              <button 
+              <button
                 onClick={() => setSettingsOpen(false)}
                 className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
               >
                 <X className="w-6 h-6 text-white" />
               </button>
             </div>
-            
+
             <div className="space-y-6">
               {/* Theme Selection */}
               <div>
@@ -544,8 +586,8 @@ export default function MaestroApp(): React.JSX.Element {
                       onClick={() => changeTheme(themeOption.id)}
                       className={`
                         w-full flex items-center p-3 rounded-xl transition-colors
-                        ${theme === themeOption.id 
-                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400' 
+                        ${theme === themeOption.id
+                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400'
                           : 'bg-white/10 text-white/70 hover:bg-white/20'
                         }
                       `}
@@ -564,8 +606,8 @@ export default function MaestroApp(): React.JSX.Element {
                   onClick={toggleButtonColorMode}
                   className={`
                     w-full flex items-center justify-between p-3 rounded-xl transition-colors
-                    ${buttonColorMode 
-                      ? 'bg-green-500/30 text-white' 
+                    ${buttonColorMode
+                      ? 'bg-green-500/30 text-white'
                       : 'bg-orange-500/30 text-white'
                     }
                   `}
@@ -576,8 +618,8 @@ export default function MaestroApp(): React.JSX.Element {
                   </div>
                 </button>
                 <p className="text-white/60 text-xs px-3 mt-2">
-                  {buttonColorMode 
-                    ? 'All buttons use vibrant multicolor' 
+                  {buttonColorMode
+                    ? 'All buttons use vibrant multicolor'
                     : 'Buttons match the theme scheme color'
                   }
                 </p>
@@ -591,8 +633,8 @@ export default function MaestroApp(): React.JSX.Element {
                     onClick={toggleReducedMotion}
                     className={`
                       w-full flex items-center justify-between p-3 rounded-xl transition-colors
-                      ${reducedMotion 
-                        ? 'bg-green-500/30 text-white' 
+                      ${reducedMotion
+                        ? 'bg-green-500/30 text-white'
                         : 'bg-white/10 text-white/70 hover:bg-white/20'
                       }
                     `}
@@ -602,13 +644,13 @@ export default function MaestroApp(): React.JSX.Element {
                       <div className={`w-5 h-5 bg-white rounded-full transition-transform mt-0.5 ${reducedMotion ? 'translate-x-6 ml-1' : 'ml-0.5'}`} />
                     </div>
                   </button>
-                  
+
                   <button
                     onClick={toggleHighContrast}
                     className={`
                       w-full flex items-center justify-between p-3 rounded-xl transition-colors
-                      ${highContrast 
-                        ? 'bg-green-500/30 text-white' 
+                      ${highContrast
+                        ? 'bg-green-500/30 text-white'
                         : 'bg-white/10 text-white/70 hover:bg-white/20'
                       }
                     `}
@@ -637,8 +679,8 @@ export default function MaestroApp(): React.JSX.Element {
                       }}
                       className={`
                         p-3 rounded-xl transition-colors text-center
-                        ${handedness === hand.id 
-                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400' 
+                        ${handedness === hand.id
+                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400'
                           : 'bg-white/10 text-white/70 hover:bg-white/20'
                         }
                       `}
@@ -665,8 +707,8 @@ export default function MaestroApp(): React.JSX.Element {
                       }}
                       className={`
                         w-full flex items-center p-3 rounded-xl transition-colors
-                        ${language === lang.id 
-                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400' 
+                        ${language === lang.id
+                          ? 'bg-blue-500/30 text-white ring-2 ring-blue-400'
                           : 'bg-white/10 text-white/70 hover:bg-white/20'
                         }
                       `}
