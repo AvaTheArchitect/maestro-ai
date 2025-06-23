@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,5 +16,9 @@
   "description": "",
   "devDependencies": {
     "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "@octokit/rest": "^22.0.0",
+    "codemirror": "^5.65.19"
   }
 }

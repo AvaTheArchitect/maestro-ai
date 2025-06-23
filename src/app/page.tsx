@@ -19,11 +19,308 @@ import {
   X,
   Sun,
   Moon,
-  Palette
+  Palette,
+  Play,
+  Pause,
+  RotateCcw,
+  Volume2
 } from "lucide-react"
+
+// ✅ Import Cipher Components
+import TunerDial from '@/components/Cipher/TunerDial'
+import Metronome from '@/components/Cipher/Metronome'
 
 export type TabId = "home" | "songs" | "setlist" | "tools" | "profile"
 export type ModuleId = "practice" | "singers" | "jam" | "lessons" | "build" | "ai-tab"
+
+// Tool Components
+const MetronomeComponent = ({ onClose }: { onClose: () => void }) => {
+  const [bpm, setBpm] = useState(120)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [currentBeat, setCurrentBeat] = useState(0)
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCurrentBeat(prev => (prev + 1) % 4)
+      }, (60 / bpm) * 1000)
+    }
+    return () => clearInterval(interval)
+  }, [isPlaying, bpm])
+
+  return (
+    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-bold text-white">Metronome</h3>
+        <button
+          onClick={onClose}
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        >
+          <X className="w-6 h-6 text-white" />
+        </button>
+      </div>
+
+      <div className="text-center space-y-6">
+        {/* BPM Display */}
+        <div>
+          <div className="text-6xl font-bold text-white mb-2">{bpm}</div>
+          <div className="text-white/70">BPM</div>
+        </div>
+
+        {/* BPM Controls */}
+        <div className="flex items-center justify-center space-x-4">
+          <button
+            onClick={() => setBpm(Math.max(40, bpm - 10))}
+            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
+          >
+            -10
+          </button>
+          <button
+            onClick={() => setBpm(Math.max(40, bpm - 1))}
+            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
+          >
+            -1
+          </button>
+          <button
+            onClick={() => setBpm(Math.min(200, bpm + 1))}
+            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
+          >
+            +1
+          </button>
+          <button
+            onClick={() => setBpm(Math.min(200, bpm + 10))}
+            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
+          >
+            +10
+          </button>
+        </div>
+
+        {/* Beat Indicator */}
+        <div className="flex justify-center space-x-2 mb-6">
+          {[0, 1, 2, 3].map((beat) => (
+            <div
+              key={beat}
+              className={`w-4 h-4 rounded-full transition-colors ${currentBeat === beat && isPlaying
+                ? 'bg-orange-500'
+                : 'bg-white/30'
+                }`}
+            />
+          ))}
+        </div>
+
+        {/* Play/Pause Button */}
+        <button
+          onClick={() => setIsPlaying(!isPlaying)}
+          className={`
+            flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-lg
+            ${isPlaying
+              ? 'bg-red-500 hover:bg-red-600 text-white'
+              : 'bg-green-500 hover:bg-green-600 text-white'
+            }
+          `}
+        >
+          {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+          <span>{isPlaying ? 'Stop' : 'Start'}</span>
+        </button>
+
+        {/* Quick BPM Presets */}
+        <div className="grid grid-cols-4 gap-2 mt-6">
+          {[60, 80, 100, 120, 140, 160, 180, 200].map((preset) => (
+            <button
+              key={preset}
+              onClick={() => setBpm(preset)}
+              className={`
+                p-2 rounded-lg text-sm font-medium transition-colors
+                ${bpm === preset
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+                }
+              `}
+            >
+              {preset}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const TunerComponent = ({ onClose }: { onClose: () => void }) => {
+  const [selectedString, setSelectedString] = useState(0)
+  const [tuning, setTuning] = useState('standard')
+
+  const tunings = {
+    standard: ['E', 'A', 'D', 'G', 'B', 'E'],
+    dropD: ['D', 'A', 'D', 'G', 'B', 'E'],
+    openG: ['D', 'G', 'D', 'G', 'B', 'D']
+  }
+
+  return (
+    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-bold text-white">Guitar Tuner</h3>
+        <button
+          onClick={onClose}
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        >
+          <X className="w-6 h-6 text-white" />
+        </button>
+      </div>
+
+      <div className="space-y-6">
+        {/* Tuning Selection */}
+        <div>
+          <h4 className="text-white font-medium mb-3">Tuning</h4>
+          <div className="flex space-x-2">
+            {Object.keys(tunings).map((tuningType) => (
+              <button
+                key={tuningType}
+                onClick={() => setTuning(tuningType)}
+                className={`
+                  px-4 py-2 rounded-xl font-medium capitalize transition-colors
+                  ${tuning === tuningType
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white/20 text-white hover:bg-white/30'
+                  }
+                `}
+              >
+                {tuningType}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* String Selection */}
+        <div className="grid grid-cols-6 gap-2">
+          {tunings[tuning as keyof typeof tunings].map((note, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedString(index)}
+              className={`
+                p-4 rounded-xl font-bold text-2xl transition-colors
+                ${selectedString === index
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-white/20 text-white hover:bg-white/30'
+                }
+              `}
+            >
+              {note}
+            </button>
+          ))}
+        </div>
+
+        {/* Tuner Display */}
+        <div className="text-center py-8 bg-black/20 rounded-xl">
+          <div className="text-4xl font-bold text-white mb-2">
+            {tunings[tuning as keyof typeof tunings][selectedString]}
+          </div>
+          <div className="text-white/70 mb-4">String {selectedString + 1}</div>
+
+          {/* Pitch Indicator */}
+          <div className="flex justify-center items-center space-x-2 mb-4">
+            <div className="w-2 h-8 bg-red-500 rounded"></div>
+            <div className="w-2 h-12 bg-yellow-500 rounded"></div>
+            <div className="w-4 h-16 bg-green-500 rounded"></div>
+            <div className="w-2 h-12 bg-yellow-500 rounded"></div>
+            <div className="w-2 h-8 bg-red-500 rounded"></div>
+          </div>
+
+          <div className="text-green-400 font-medium">In Tune</div>
+        </div>
+
+        {/* Auto-tune button */}
+        <button className="w-full bg-gradient-to-r from-purple-500 to-purple-700 text-white py-4 rounded-xl font-bold text-lg hover:from-purple-600 hover:to-purple-800 transition-colors">
+          <Volume2 className="w-6 h-6 inline mr-2" />
+          Play Reference Tone
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const PrintComponent = ({ onClose }: { onClose: () => void }) => {
+  const [printOptions, setPrintOptions] = useState({
+    includeTabs: true,
+    includeChords: true,
+    includeMetronome: false,
+    paperSize: 'letter'
+  })
+
+  return (
+    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-2xl font-bold text-white">Print Practice Sheet</h3>
+        <button
+          onClick={onClose}
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        >
+          <X className="w-6 h-6 text-white" />
+        </button>
+      </div>
+
+      <div className="space-y-6">
+        <div>
+          <h4 className="text-white font-medium mb-3">Print Options</h4>
+          <div className="space-y-3">
+            {[
+              { key: 'includeTabs', label: 'Include Tablature' },
+              { key: 'includeChords', label: 'Include Chord Charts' },
+              { key: 'includeMetronome', label: 'Include Metronome Markings' }
+            ].map((option) => (
+              <label key={option.key} className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  checked={printOptions[option.key as keyof typeof printOptions] as boolean}
+                  onChange={(e) => setPrintOptions(prev => ({
+                    ...prev,
+                    [option.key]: e.target.checked
+                  }))}
+                  className="w-5 h-5 rounded bg-white/20 border-white/30 text-blue-500 focus:ring-blue-500"
+                />
+                <span className="text-white">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-white font-medium mb-3">Paper Size</h4>
+          <select
+            value={printOptions.paperSize}
+            onChange={(e) => setPrintOptions(prev => ({ ...prev, paperSize: e.target.value }))}
+            className="w-full p-3 rounded-xl bg-white/20 text-white border border-white/30 focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="letter">Letter (8.5" x 11")</option>
+            <option value="a4">A4</option>
+            <option value="legal">Legal (8.5" x 14")</option>
+          </select>
+        </div>
+
+        <div className="bg-white/10 rounded-xl p-4">
+          <h4 className="text-white font-medium mb-2">Preview</h4>
+          <div className="bg-white rounded-lg p-4 text-black text-sm">
+            <div className="text-center mb-4">
+              <h5 className="font-bold">Practice Session</h5>
+              <p className="text-gray-600">Generated by Maestro.AI</p>
+            </div>
+            <div className="space-y-2">
+              {printOptions.includeTabs && <div>📄 Tablature included</div>}
+              {printOptions.includeChords && <div>🎸 Chord charts included</div>}
+              {printOptions.includeMetronome && <div>⏱️ Metronome markings included</div>}
+            </div>
+          </div>
+        </div>
+
+        <button className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-4 rounded-xl font-bold text-lg hover:from-green-600 hover:to-green-800 transition-colors">
+          <Printer className="w-6 h-6 inline mr-2" />
+          Print Practice Sheet
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export default function MaestroApp(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<TabId>("home")
@@ -32,6 +329,21 @@ export default function MaestroApp(): React.JSX.Element {
   const [password, setPassword] = useState("")
   const [toolDrawerOpen, setToolDrawerOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
+
+  // ✅ NEW: Dynamic Component Injection by Tool ID
+  const [activeTool, setActiveTool] = useState<string | null>(null)
+
+  // ✅ AutoClose on Escape Key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setActiveTool(null)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [])
 
   // Theme and settings state
   const [theme, setTheme] = useState<string>('light')
@@ -218,6 +530,20 @@ export default function MaestroApp(): React.JSX.Element {
     }
   }
 
+  // ✅ NEW: Tool Component Renderer (kept for Print component)
+  const renderActiveTool = (): React.JSX.Element | null => {
+    if (!activeTool) return null
+
+    const closeActiveTool = () => setActiveTool(null)
+
+    switch (activeTool) {
+      case 'print':
+        return <PrintComponent onClose={closeActiveTool} />
+      default:
+        return null
+    }
+  }
+
   // Main modules configuration
   const modules = [
     {
@@ -381,6 +707,17 @@ export default function MaestroApp(): React.JSX.Element {
   }
 
   const renderMainContent = (): React.JSX.Element => {
+    // ✅ Show Print Tool if active (only for tools without Cipher components)
+    if (activeTool === 'print') {
+      return (
+        <div className="flex-1 p-6 pb-24">
+          <div className="max-w-4xl mx-auto">
+            {renderActiveTool()}
+          </div>
+        </div>
+      )
+    }
+
     if (currentModule) {
       const moduleData = modules.find(m => m.id === currentModule)
       if (!moduleData) {
@@ -489,6 +826,7 @@ export default function MaestroApp(): React.JSX.Element {
                   } else if (item.id === 'home') {
                     setActiveTab('home')
                     setCurrentModule(null)
+                    setActiveTool(null) // ✅ Clear active tool when going home
                   } else {
                     setActiveTab(item.id as TabId)
                   }
@@ -496,7 +834,7 @@ export default function MaestroApp(): React.JSX.Element {
                 className={`
                   flex flex-col items-center p-3 rounded-xl transition-all duration-200
                   focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
-                  ${(activeTab === item.id) || (item.id === 'home' && !currentModule)
+                  ${(activeTab === item.id) || (item.id === 'home' && !currentModule && !activeTool)
                     ? 'text-blue-400 bg-blue-400/20'
                     : 'text-white hover:text-white/80'
                   }
@@ -536,9 +874,11 @@ export default function MaestroApp(): React.JSX.Element {
                   key={tool.id}
                   onClick={() => {
                     if (tool.id === 'settings') {
-                      setSettingsOpen(true)
+                      setSettingsOpen(true);
+                    } else {
+                      setActiveTool(tool.id);
                     }
-                    setToolDrawerOpen(false)
+                    setToolDrawerOpen(false);
                   }}
                   className="flex flex-col items-center p-4 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
                 >
@@ -549,6 +889,28 @@ export default function MaestroApp(): React.JSX.Element {
             </div>
           </div>
         </div>
+
+        {/* ✅ Render Tool Components Below Drawer */}
+        {activeTool === 'tuner' && (
+          <div
+            className="fixed inset-0 z-40 flex items-center justify-center p-4"
+            onClick={() => setActiveTool(null)}
+          >
+            <div onClick={(e) => e.stopPropagation()}>
+              <TunerDial freq={440} cents={0} />
+            </div>
+          </div>
+        )}
+        {activeTool === 'metronome' && (
+          <div
+            className="fixed inset-0 z-40 flex items-center justify-center p-4"
+            onClick={() => setActiveTool(null)}
+          >
+            <div onClick={(e) => e.stopPropagation()}>
+              <Metronome />
+            </div>
+          </div>
+        )}
 
         {/* Settings Modal */}
         <div className={`

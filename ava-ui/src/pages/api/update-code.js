@@ -1,30 +1,25 @@
 import { Octokit } from "@octokit/rest";
 
 export default async function handler(req, res) {
-  const { content, path, message } = req.body;
+  const { content, path, message, branch = "main" } = req.body;
 
-  const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+  const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN,
+  });
 
   try {
-    const { data: file } = await octokit.repos.getContent({
-      owner: process.env.GITHUB_OWNER,
-      repo: process.env.GITHUB_REPO,
-      path,
-    });
-
-    await octokit.repos.createOrUpdateFileContents({
-      owner: process.env.GITHUB_OWNER,
-      repo: process.env.GITHUB_REPO,
+    const resp = await octokit.repos.createOrUpdateFileContents({
+      owner: process.env.AvaTheArchitect,
+      repo: process.env.ava_ui,
       path,
       message,
       content,
-      sha: file.sha,
+      branch,
     });
 
-    res.status(200).json({ success: true });
+    res.json({ output: JSON.stringify(resp.data) });
   } catch (err) {
-    console.error("GitHub update error", err);
-    res.status(500).json({ error: err.message });
+    res.json({ output: err.message });
   }
 }
 
