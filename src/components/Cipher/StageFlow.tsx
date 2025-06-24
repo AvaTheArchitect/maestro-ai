@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import TunerPanel from './TunerPanel';
-import VisualFeedHUD from './VisualFeedHUD';
+import VisualFeedbackPanel from './VisualFeedbackPanel';
 import TunerDial from './TunerDial';
 import useAccessibilityToggles from '@/hooks/useAccessibilityToggles';
 import { handleVoiceAccessibilityCommand } from '@/modules/voiceAccessibilityMap';
