@@ -1,5 +1,5 @@
 import React from 'react';
-import VisualFeedbackPanel from '../VisualFeedbackPanel'; // Or correct path
+import VisualFeedbackPanel from './VisualFeedbackPanel'; // Or correct path
 
 export default function VisionPanel() {
   return (
