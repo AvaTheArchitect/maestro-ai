@@ -8,6 +8,7 @@ import { handleVoiceAccessibilityCommand } from '@/modules/voiceAccessibilityMap
 import { runSimonPrime } from '@/modules/SimonPrimeEngine';
 import AutoLoopPanel from './AutoLoopPanel';
 import OverlayTrail from './OverlayTrail';
+import Metronome from '@/components/cipher/Metronome'
 
 export default function StageFlow() {
   const [showInspector, setShowInspector] = useState(true);
@@ -60,7 +61,7 @@ export default function StageFlow() {
         </>
       )}
 
-
+      <Metronome onClose={() => setShowMetronome(false)} />
 
       <TunerPanel onFreqUpdate={(f, c) => { setTunerFreq(f); setTunerCents(c); }} />
       <TunerDial freq={tunerFreq} cents={tunerCents} />
