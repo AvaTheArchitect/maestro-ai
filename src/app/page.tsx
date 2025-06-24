@@ -28,123 +28,119 @@ import {
 
 // ✅ Import Cipher Components
 import TunerDial from '@/components/Cipher/TunerDial'
-import Metronome from '@/components/Cipher/Metronome'
 
 export type TabId = "home" | "songs" | "setlist" | "tools" | "profile"
 export type ModuleId = "practice" | "singers" | "jam" | "lessons" | "build" | "ai-tab"
 
 // Tool Components
-const MetronomeComponent = ({ onClose }: { onClose: () => void }) => {
-  const [bpm, setBpm] = useState(120)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentBeat, setCurrentBeat] = useState(0)
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setCurrentBeat(prev => (prev + 1) % 4)
-      }, (60 / bpm) * 1000)
-    }
-    return () => clearInterval(interval)
-  }, [isPlaying, bpm])
 
-  return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-white">Metronome</h3>
+useEffect(() => {
+  let interval: NodeJS.Timeout
+  if (isPlaying) {
+    interval = setInterval(() => {
+      setCurrentBeat(prev => (prev + 1) % 4)
+    }, (60 / bpm) * 1000)
+  }
+  return () => clearInterval(interval)
+}, [isPlaying, bpm])
+
+return (
+  <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+    <div className="flex justify-between items-center mb-6">
+      <h3 className="text-2xl font-bold text-white">Metronome</h3>
+      <button
+        onClick={onClose}
+        className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+      >
+        <X className="w-6 h-6 text-white" />
+      </button>
+    </div>
+
+    <div className="text-center space-y-6">
+      {/* BPM Display */}
+      <div>
+        <div className="text-6xl font-bold text-white mb-2">{bpm}</div>
+        <div className="text-white/70">BPM</div>
+      </div>
+
+      {/* BPM Controls */}
+      <div className="flex items-center justify-center space-x-4">
         <button
-          onClick={onClose}
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          onClick={() => setBpm(Math.max(40, bpm - 10))}
+          className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
         >
-          <X className="w-6 h-6 text-white" />
+          -10
+        </button>
+        <button
+          onClick={() => setBpm(Math.max(40, bpm - 1))}
+          className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
+        >
+          -1
+        </button>
+        <button
+          onClick={() => setBpm(Math.min(200, bpm + 1))}
+          className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
+        >
+          +1
+        </button>
+        <button
+          onClick={() => setBpm(Math.min(200, bpm + 10))}
+          className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
+        >
+          +10
         </button>
       </div>
 
-      <div className="text-center space-y-6">
-        {/* BPM Display */}
-        <div>
-          <div className="text-6xl font-bold text-white mb-2">{bpm}</div>
-          <div className="text-white/70">BPM</div>
-        </div>
+      {/* Beat Indicator */}
+      <div className="flex justify-center space-x-2 mb-6">
+        {[0, 1, 2, 3].map((beat) => (
+          <div
+            key={beat}
+            className={`w-4 h-4 rounded-full transition-colors ${currentBeat === beat && isPlaying
+              ? 'bg-orange-500'
+              : 'bg-white/30'
+              }`}
+          />
+        ))}
+      </div>
 
-        {/* BPM Controls */}
-        <div className="flex items-center justify-center space-x-4">
-          <button
-            onClick={() => setBpm(Math.max(40, bpm - 10))}
-            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
-          >
-            -10
-          </button>
-          <button
-            onClick={() => setBpm(Math.max(40, bpm - 1))}
-            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
-          >
-            -1
-          </button>
-          <button
-            onClick={() => setBpm(Math.min(200, bpm + 1))}
-            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
-          >
-            +1
-          </button>
-          <button
-            onClick={() => setBpm(Math.min(200, bpm + 10))}
-            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl font-bold"
-          >
-            +10
-          </button>
-        </div>
-
-        {/* Beat Indicator */}
-        <div className="flex justify-center space-x-2 mb-6">
-          {[0, 1, 2, 3].map((beat) => (
-            <div
-              key={beat}
-              className={`w-4 h-4 rounded-full transition-colors ${currentBeat === beat && isPlaying
-                ? 'bg-orange-500'
-                : 'bg-white/30'
-                }`}
-            />
-          ))}
-        </div>
-
-        {/* Play/Pause Button */}
-        <button
-          onClick={() => setIsPlaying(!isPlaying)}
-          className={`
+      {/* Play/Pause Button */}
+      <button
+        onClick={() => setIsPlaying(!isPlaying)}
+        className={`
             flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-lg
             ${isPlaying
-              ? 'bg-red-500 hover:bg-red-600 text-white'
-              : 'bg-green-500 hover:bg-green-600 text-white'
-            }
+            ? 'bg-red-500 hover:bg-red-600 text-white'
+            : 'bg-green-500 hover:bg-green-600 text-white'
+          }
           `}
-        >
-          {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-          <span>{isPlaying ? 'Stop' : 'Start'}</span>
-        </button>
+      >
+        {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+        <span>{isPlaying ? 'Stop' : 'Start'}</span>
+      </button>
 
-        {/* Quick BPM Presets */}
-        <div className="grid grid-cols-4 gap-2 mt-6">
-          {[60, 80, 100, 120, 140, 160, 180, 200].map((preset) => (
-            <button
-              key={preset}
-              onClick={() => setBpm(preset)}
-              className={`
+      {/* Quick BPM Presets */}
+      <div className="grid grid-cols-4 gap-2 mt-6">
+        {[60, 80, 100, 120, 140, 160, 180, 200].map((preset) => (
+          <button
+            key={preset}
+            onClick={() => setBpm(preset)}
+            className={`
                 p-2 rounded-lg text-sm font-medium transition-colors
                 ${bpm === preset
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white/20 text-white hover:bg-white/30'
-                }
+                ? 'bg-blue-500 text-white'
+                : 'bg-white/20 text-white hover:bg-white/30'
+              }
               `}
-            >
-              {preset}
-            </button>
-          ))}
-        </div>
+          >
+            {preset}
+          </button>
+        ))}
       </div>
     </div>
-  )
+  </div>
+)
 }
 
 const TunerComponent = ({ onClose }: { onClose: () => void }) => {

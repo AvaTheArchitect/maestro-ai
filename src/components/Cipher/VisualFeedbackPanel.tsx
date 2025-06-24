@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-export default function VisualFeedHUD({ bounds, label }) {
+export default function VisualFeedbackPanel({ bounds, label }) {
     if (!bounds) return null;
 
     const { top, left, width, height } = bounds;
