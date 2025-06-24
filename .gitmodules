@@ -3,5 +3,6 @@ path = cipher-engine-clean-v2
 url = https://github.com/AvaTheArchitect/cipher-engine-clean-v2.git
 
 [submodule "components/cipher"]
-  path = components/cipher
-  url = https://github.com/AvaTheArchitect/cipher
+path = components/cipher
+url = https://github.com/AvaTheArchitect/cipher-engine.git
+
