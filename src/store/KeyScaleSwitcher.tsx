@@ -1,4 +1,3 @@
-import KeyScaleSwitcher from '@/store/KeyScaleSwitcher';
 import KeyCircle from './KeyCircle';
 import ScaleMenu from './ScaleMenu';
 import Fretboard from './Fretboard';

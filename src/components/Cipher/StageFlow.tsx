@@ -1,7 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react'
 import TunerPanel from './TunerPanel';
-import VisualFeedbackPanel from './VisualFeedbackPanel';
 import TunerDial from './TunerDial';
 import useAccessibilityToggles from '@/hooks/useAccessibilityToggles';
 import { handleVoiceAccessibilityCommand } from '@/modules/voiceAccessibilityMap';
@@ -16,6 +15,14 @@ export default function StageFlow() {
   const [tunerCents, setTunerCents] = useState(0);
   const toggles = useAccessibilityToggles();
   const [simonMode, setSimonMode] = useState(false);
+
+  export const VisualFeedHUD = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
+    return (
+      <div className={`visual-feed-hud bg-white/10 backdrop-blur-lg rounded-lg p-4 border border-white/20 ${className}`}>
+        {children}
+      </div>
+    )
+  }
 
   useEffect(() => {
     if (simonMode) {
@@ -65,6 +72,7 @@ export default function StageFlow() {
 
       <TunerPanel onFreqUpdate={(f, c) => { setTunerFreq(f); setTunerCents(c); }} />
       <TunerDial freq={tunerFreq} cents={tunerCents} />
+
 
       {showInspector && (
         <VisualFeedHUD bounds={{ top: 120, left: 160, width: 100, height: 40 }} label="Simon's AI HUD" />

@@ -7,6 +7,12 @@ import VisualPracticeHUD from './VisualPracticeHUD';
 const chords = ['Em', 'C', 'D', 'G'];
 const bpm = 100;
 
+{activeTool === 'tuner' && (
+  <ToolPanel title="Tuner">
+    <TunerDial onClose={() => setActiveTool('none')} />
+  </ToolPanel>
+)}
+
 export default function PracticeGenerator() {
   const [currentChord, setCurrentChord] = useState(null);
 
